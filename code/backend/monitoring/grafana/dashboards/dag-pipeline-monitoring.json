@@ -1,0 +1,120 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "DAG Pipeline Monitoring",
+    "tags": ["research-copilot", "dag", "airflow"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "DAG Execution Status",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "airflow_dag_run_total{state=\"success\"} / airflow_dag_run_total * 100",
+            "legendFormat": "Success Rate %"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "DAG Execution Duration",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(airflow_dag_run_duration_seconds_bucket[5m]))",
+            "legendFormat": "95th percentile"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "Task Success Rates",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(airflow_task_instance_total{state=\"success\"}[5m]) / rate(airflow_task_instance_total[5m]) * 100",
+            "legendFormat": "{{dag_id}} {{task_id}}"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+      },
+      {
+        "id": 4,
+        "title": "Task Performance Metrics",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(airflow_task_instance_duration_seconds_bucket[5m]))",
+            "legendFormat": "{{dag_id}} {{task_id}}"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+      },
+      {
+        "id": 5,
+        "title": "Organization Pipeline Metrics",
+        "type": "table",
+        "targets": [
+          {
+            "expr": "rate(airflow_dag_run_total[5m]) by (organization)",
+            "legendFormat": "{{organization}}"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16}
+      },
+      {
+        "id": 6,
+        "title": "DAG Errors",
+        "type": "table",
+        "targets": [
+          {
+            "expr": "airflow_dag_run_total{state=\"failed\"}",
+            "legendFormat": "{{dag_id}}"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16}
+      },
+      {
+        "id": 7,
+        "title": "Task Errors",
+        "type": "table",
+        "targets": [
+          {
+            "expr": "airflow_task_instance_total{state=\"failed\"}",
+            "legendFormat": "{{dag_id}} {{task_id}}"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 24}
+      },
+      {
+        "id": 8,
+        "title": "Alerting Panel - Low Success Rate",
+        "type": "alertlist",
+        "alerts": [
+          {
+            "name": "DAG Success Rate Alert"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 24}
+      }
+    ],
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "templating": {
+      "list": []
+    },
+    "annotations": {
+      "list": []
+    },
+    "refresh": "5s",
+    "schemaVersion": 27,
+    "version": 0,
+    "links": []
+  }
+}

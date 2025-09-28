@@ -1,0 +1,157 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Research Copilot Overview",
+    "tags": ["research-copilot", "overview"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "HTTP Request Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(http_requests_total[5m])",
+            "legendFormat": "{{method}} {{status}}"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "HTTP Request Latency",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
+            "legendFormat": "95th percentile"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "HTTP Error Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(http_requests_total{status=~\"5..\"}[5m]) / rate(http_requests_total[5m]) * 100",
+            "legendFormat": "Error rate %"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+      },
+      {
+        "id": 4,
+        "title": "RAG Search Latency",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(rag_search_duration_seconds_bucket[5m]))",
+            "legendFormat": "95th percentile"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+      },
+      {
+        "id": 5,
+        "title": "RAG Generation Time",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(rag_generation_duration_seconds_bucket[5m]))",
+            "legendFormat": "95th percentile"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16}
+      },
+      {
+        "id": 6,
+        "title": "Embedding Metrics",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(rag_embedding_requests_total[5m])",
+            "legendFormat": "Embedding requests"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16}
+      },
+      {
+        "id": 7,
+        "title": "Organization Request Rates",
+        "type": "table",
+        "targets": [
+          {
+            "expr": "rate(http_requests_total[5m]) by (organization)",
+            "legendFormat": "{{organization}}"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 24}
+      },
+      {
+        "id": 8,
+        "title": "Organization Limits",
+        "type": "table",
+        "targets": [
+          {
+            "expr": "organization_rate_limit_exceeded_total",
+            "legendFormat": "{{organization}}"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 24}
+      },
+      {
+        "id": 9,
+        "title": "CPU Usage",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "100 - (avg by(instance) (irate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+            "legendFormat": "CPU %"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 32}
+      },
+      {
+        "id": 10,
+        "title": "Memory Usage",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "(1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100",
+            "legendFormat": "Memory %"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 32}
+      },
+      {
+        "id": 11,
+        "title": "Database Connections",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "pg_stat_activity_count",
+            "legendFormat": "Active connections"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 40}
+      }
+    ],
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "templating": {
+      "list": []
+    },
+    "annotations": {
+      "list": []
+    },
+    "refresh": "5s",
+    "schemaVersion": 27,
+    "version": 0,
+    "links": []
+  }
+}
